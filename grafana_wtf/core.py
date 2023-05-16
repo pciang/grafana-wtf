@@ -52,8 +52,11 @@ class GrafanaEngine:
             log.info(f"Setting up response cache to never expire (infinite caching)")
         else:
             log.info(f"Setting up response cache to expire after {expire_after} seconds")
-        requests_cache.install_cache(expire_after=expire_after)
+        requests_cache.install_cache(expire_after=expire_after, use_cache_dir=True)
+        cache_database_file = requests_cache.get_cache().db_path
+        log.info(f"Response cache database location is {cache_database_file}")
         if drop_cache:
+            log.info("Dropping response cache")
             self.clear_cache()
 
         return self
